@@ -1,9 +1,9 @@
 ########## Import ##########
 
 import time
-import FirstTests.PlotTraffic as PlotTraffic
-import FirstTests.Car as Car
-import FirstTests.FctRank as FctRank
+import PlotTraffic as PlotTraffic
+import Car as Car
+import FctRank as FctRank
 
 ########## Defined Traffic ##########
 
