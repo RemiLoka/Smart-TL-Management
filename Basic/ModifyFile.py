@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def calculationError(VehicleID, dt=10):
+def calculationError(VehicleID, dt=1):
     df = pd.read_csv("memorybasics.csv")
     sumx = 0
     sumy = 0
@@ -43,4 +43,4 @@ def calculationTot():
     means = sum/(2*len(listIndex))
     df.loc[0, 'tot'] = means
     df.to_csv('memorybasics.csv', index=False)
-    return means 
+    return means
