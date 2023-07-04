@@ -51,4 +51,4 @@ def Direction(vehicle, posTL):
                 dir = 'north'
         else:
             exit = "in approach"
-    return exit +' to '+ dir + ' with ' + str(angle) + ' degree'
+    return exit +' to '+ dir + ' with ' + str(angle) + ' degree', dir

@@ -5,7 +5,7 @@ def calculationError(VehicleID, dt=1):
     df = pd.read_csv("memorybasics.csv")
     sumx = 0
     sumy = 0
-    listIndex = list(np.where(df["Information"] == 'vehicle: %d'%VehicleID)[0])
+    listIndex = list(np.where(df["Information"] == 'vehicle: %s'%VehicleID)[0])
     listTuple = tuple(listIndex)
     if dt == 1:
         pass
