@@ -15,7 +15,7 @@ def detectNeighbourg(listID, comRange = 50):
             if i == j:
                 pass
             else:   
-                if((np.sqrt((listPos[i][0]-listPos[j][0])**2+(listPos[i][1]-listPos[j][1])**2) <= comRange) and (traci.vehicle.getLaneID(listID[i]) == traci.vehicle.getLaneID(listID[j]))):
+                if((np.sqrt((listPos[i][0]-listPos[j][0])**2+(listPos[i][1]-listPos[j][1])**2) <= comRange) and (traci.vehicle.getAngle(listID[j]) - 45 < traci.vehicle.getAngle(listID[i]) < traci.vehicle.getAngle(listID[j]) + 45)):
                     neighbour_idi.append(listID[j])
                     neighbour_placei.append(j)
         neighbour_id.append(neighbour_idi)
@@ -27,7 +27,6 @@ def roleCar(listID, comRange = 50):
     numberOfCar = len(listID)
     listNeighbor = detectNeighbourg(listID, comRange)
     listRank = []
-
     for i in range(numberOfCar):                # Creation Matrix
         listNb = listNeighbor[0][i]
         listNb.insert(0,listID[i])
