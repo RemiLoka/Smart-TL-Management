@@ -2,6 +2,14 @@ import pandas as pd
 import numpy as np
 
 def calculationError(VehicleID, dt=1):
+    '''
+    This function modifies the memorybasics.csv file to add the errors and average errors for each VehicleID
+    The error between the predicted position at time t + dt and the actual value
+    
+            Parameters:
+                    VehicleID (string): the vehicle for which we wish to calculate the errors
+                    dt (int): the step, by default: 1s
+    '''
     df = pd.read_csv("memorybasics.csv")
     sumx = 0
     sumy = 0
@@ -33,6 +41,10 @@ def calculationError(VehicleID, dt=1):
     df.to_csv('memorybasics.csv', index=False)
 
 def calculationTot():
+    '''
+    This function modifies the memorybasics.csv file to add the total errors
+    Needs to be used after the calculationError function
+    '''
     df = pd.read_csv("memorybasics.csv")
     df['bool'] = pd.notna(df["means x"])
     listIndex = list(np.where(df["bool"] == True)[0])

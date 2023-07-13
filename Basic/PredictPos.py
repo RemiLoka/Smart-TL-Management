@@ -2,9 +2,29 @@ import numpy as np
 import traci
 
 def EuclideanDistance(a,b):
+    '''
+    Returns the euclidean distance of two position (x,y).
+
+            Parameters:
+                    a (tuple of float): postion (x,y)
+                    b (tuple of float): postion (x,y)
+
+            Returns:
+                    Euclidean Distance (str): distance
+    '''
     return np.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2)
 
 def FuturPos(vehicle, dt = 1):
+    '''
+    This function predict the futur position of a vehicle to time dt
+
+            Parameters:
+                    vehicle (string): Id of the vehicle
+                    dt (int): step time: by default set to 1s 
+
+            Returns:
+                    futurPos (tuple): postion (x,y)
+    '''
     angle = traci.vehicle.getAngle(vehicle)
     accel = traci.vehicle.getAcceleration(vehicle)
     speed = traci.vehicle.getSpeed(vehicle)
@@ -13,6 +33,17 @@ def FuturPos(vehicle, dt = 1):
     return futurPos
 
 def Direction1pos(vehicle, posTL):
+    '''
+    This function returns if a vehicle is in approach of a traffic lighter or if the vehicle move away.
+
+            Parameters:
+                    vehicle (string): Id of the vehicle
+                    postTL (tuple): postion of the traffic lighter
+
+            Returns:
+                    prev (str): 'moves away' or 'in approach'
+                    dir (str): where the vehicle is heading
+    '''
     dir = 'TL'
     angle = traci.vehicle.getAngle(vehicle)
     pos = traci.vehicle.getPosition(vehicle)
@@ -57,6 +88,18 @@ def Direction1pos(vehicle, posTL):
     return prev, dir
 
 def InformedCar(vehicle, listPosTL):
+    '''
+    This function returns for a vehicle the traffic lighter from which it leaves and the one it is supposed to arrive at.
+
+            Parameters:
+                    vehicle (string): Id of the vehicle
+                    listPostTL (list): list of postions of the traffic lighters
+
+            Returns:
+                    minApproach (tuple): position of the next traffic lighter
+                    minAway (tuple): position of the previous traffic lighter
+                    prev[1] : global direction (north, est, west, south or TL if no previous traffic lighters)
+    '''
     pos = traci.vehicle.getPosition(vehicle)
     if len(listPosTL) == 0:
         return 'need TL pos'
