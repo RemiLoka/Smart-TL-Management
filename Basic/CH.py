@@ -2,7 +2,7 @@ import numpy as np
 import traci
 from copy import copy
 
-def detectNeighbourg(listID, comRange = 50):
+def detectNeighbourg(listID, comRange = 100):
     '''
     This function returns all neighbours within the given radius (comRange)
 
@@ -75,10 +75,10 @@ def roleCar(listID, listNeighbor, initialisation = 'yes', notAssignedIndex = [],
 
             A2 = np.linalg.matrix_power(A, 2)       # Calcul EBM score
             B = 0
-            for i in range(len(A)):
-                for j in range(len(A)):
-                    if i<j and A[i,j] == 0:
-                        B += 1/(A2[i,j])
+            for n in range(len(A)):
+                for m in range(len(A)):
+                    if n<m and A[n,m] == 0:
+                        B += 1/(A2[n,m])
             listRank.append(B)
 
         listRole = [0]*numberOfCar                  # Assignement role
@@ -108,11 +108,9 @@ def roleCar(listID, listNeighbor, initialisation = 'yes', notAssignedIndex = [],
                         listRole[i] = 'CHbck'
                         listRole[listPos[0]] = 'CH'
                 else:
-                        listRole[i] == 'CHbck'
-                        listRole[listPos[0]] == 'CH'
+                        listRole[i] = 'CHbck'
+                        listRole[listPos[0]] = 'CH'
             else:                                       # more than one neighbour
-                listRankNb = []
-                listRoleNb = []
                 withoutRole = []
                 listCMNb = []
                 ch = 0
@@ -120,19 +118,19 @@ def roleCar(listID, listNeighbor, initialisation = 'yes', notAssignedIndex = [],
                 listPos.insert(0,i)
                 for j in listPos:
                     if listRole[j] == 'CH':
-                        ch = 1
+                        ch = ch + 1
                     elif listRole[j] == 'CHbck':
-                        chbck = 1
+                        chbck = chbck + 1
                     elif listRole[j] == 0:
                         withoutRole.append(j)
                     elif listRole[j] == 'CM':
                         listCMNb.append(j)
                 for j in withoutRole:
                     listRole[j] = 'CM'
-                if ch == 1 and chbck == 1:
+                if ch >= 1 and chbck >= 1:
                     for k in withoutRole+listCMNb:
                         listRole[k] = 'CM'
-                elif ch == 1 and chbck == 0:
+                elif ch >= 1 and chbck == 0:
                     max = 0
                     maxindex = 'no'
                     for k in withoutRole+listCMNb:
@@ -143,7 +141,7 @@ def roleCar(listID, listNeighbor, initialisation = 'yes', notAssignedIndex = [],
                         listRole[maxindex] = 'CHbck'
                     else:
                         listRole[withoutRole[-1]] = 'CHbck'
-                elif ch == 0 and chbck == 1:
+                elif ch == 0 and chbck >= 1:
                     max = 0
                     maxindex = 'no'
                     for k in withoutRole+listCMNb:
@@ -169,84 +167,6 @@ def roleCar(listID, listNeighbor, initialisation = 'yes', notAssignedIndex = [],
                             listRole[withoutRole[-1]] = 'CHbck'
                         else:
                             listRole[withoutRole[0]] = 'CHbck'
-                            
-
-        totalListRoleNb = []
-        for i in range(numberOfCar):
-            listRoleNb = []
-            listRoleNb.append(listRole[i])
-            for j in listNeighbor[1][i]:
-                listRoleNb.append(listRole[j])
-            totalListRoleNb.append(listRoleNb)
-        print(totalListRoleNb)
-            
-
-
-
-            # else:
-            #     listRankNb = []
-            #     listPos.insert(0,i)
-            #     for j in listPos:
-            #         listRankNb.append(listRank[j])
-            #     posCHbck = 0
-            #     for j in range(nbNb +1):
-            #         if j == 0:
-            #             vscore = listRankNb[j]
-            #             posCH = j
-            #         else:
-            #             if listRankNb[j] >= vscore:
-            #                 vscore = listRankNb[j]
-            #                 posCHbck = posCH
-            #                 posCH = j
-            #     for j in range(nbNb+1):
-            #         if j == posCH:
-            #             listRole[listPos[j]] = "CH"
-            #         elif j == posCHbck:
-            #             listRole[listPos[j]] = "CHbck"
-            #         if j != posCH and j != posCHbck:
-            #             listRole[listPos[j]] = "CM"
-            #             listCM.append(listPos[j])
-                    
-
-            # for j in listCM:                            # Verification CH
-            #     neighbour_role = []
-            #     neighbour_score = []
-            #     for pos in listNeighbor[1][j]:
-            #         neighbour_role.append(listRole[pos])
-            #         neighbour_score.append(listRank[pos])
-            #     if "CH" in neighbour_role:
-            #         pass
-            #     else:
-            #         maximum_val= neighbour_score[0]
-            #         for n in range(1, len(neighbour_score)): 
-            #             if (neighbour_score[n] > maximum_val):
-            #                 maximum_val = neighbour_score[n]
-            #         listRole[listNeighbor[1][j][neighbour_score.index(maximum_val)]] = "CH"
-
-            # listCH = []                                 # Verification CHbck
-            # for j in range(numberOfCar):
-            #     if listRole[j] == "CH":
-            #         listCH.append(j)
-            # for j in listCH:
-            #     neighbour_role = []
-            #     neighbour_score = []
-            #     if listNeighbor[0][j] == []:
-            #         pass
-            #     else:
-            #         for pos in listNeighbor[1][j]:
-            #             neighbour_role.append(listRole[pos])
-            #             neighbour_score.append(listRank[pos])
-            #         if "CHbck" in neighbour_role:
-            #             pass
-            #         else:
-            #             maximum_val= neighbour_score[0]
-            #             for n in range(1, len(neighbour_score)): 
-            #                 if neighbour_role[n] == "CH":
-            #                     pass
-            #                 else:
-            #                     if (neighbour_score[n] > maximum_val):
-            #                         maximum_val = neighbour_score[n]
-            #             listRole[listNeighbor[1][j][neighbour_score.index(maximum_val)]] = "CHbck"
 
 ########## In the case of maintenance ##########
 
@@ -267,86 +187,84 @@ def roleCar(listID, listNeighbor, initialisation = 'yes', notAssignedIndex = [],
 
             A2 = np.linalg.matrix_power(A, 2)       # Calcul EBM score
             B = 0
-            for i in range(len(A)):
-                for j in range(len(A)):
-                    if i<j and A[i,j] == 0:
-                        B += 1/(A2[i,j])
+            for n in range(len(A)):
+                for m in range(len(A)):
+                    if n<m and A[n,m] == 0:
+                        B += 1/(A2[n,m])
             listRank[i] = B
-
-        listCM = []                                 # Assignement role
-        for j in notAssignedIndex:
-            listNb = listNeighbor[0][j].copy()
-            listPos = listNeighbor[1][j].copy()
+                  
+        for i in notAssignedIndex:      # Assignement role
+            listNb = listNeighbor[0][i].copy()
+            listPos = listNeighbor[1][i].copy()
             nbNb = len(listNb)
-            if listNeighbor[0][j] == []:
-                listRole[j] = "CH"
-            else:
-                listRankNb = []
-                listRoleNb = []
+            if nbNb == 0:                               # no neighbours
+                listRole[i] = "CH"
+            elif nbNb == 1:                             # a single neighbour
+                if(listRole[listPos[0]] != 0):
+                    if listRole[listPos[0]] == 'CH':
+                        listRole[i] = 'CHbck'
+                    else:
+                        listRole[listPos[0]] = 'CHbck'
+                        listRole[i] = 'CH'
+                else:
+                        listRole[i] = 'CHbck'
+                        listRole[listPos[0]] = 'CH'
+            else:                                       # more than one neighbour
+                withoutRole = []
+                listCMNb = []
                 ch = 0
                 chbck = 0
-                listPos.insert(0,j)
-                listRankNb.append(listRank[j])
-#                print(listPos)
-                for i in range(len(listPos)):
-                    listRankNb.append(listRank[listPos[i]])
-                    listRoleNb.append(listRole[listPos[i]])
-                    if listRole[listPos[i]] == 'CH':
-                        ch = 1
-                        indexch = i
-                    elif listRole[listPos[i]] == 'CHbck':
-                        chbck = 1
-                        indexchbck = i
-#                print(listRoleNb)
-                if (ch == 1 and chbck == 1):
-                    listRole[i]='CM'
-
-                elif (ch == 0 and chbck == 1 and len(listNeighbor[0][j]) == 1):
-                    listRole[indexchbck] = 'CH'
-
-                elif (ch == 0 and chbck == 1 and len(listNeighbor[0][j]) > 2):
-                    listRole[indexchbck] = 'CH'
-                    neighbour_role = []
-                    neighbour_score = []
-                    for pos in listPos:
-                        neighbour_role.append(listRole[pos])
-                        neighbour_score.append(listRank[pos])
-                        maximum_val = neighbour_score[0]
-                        for n in range(1, len(neighbour_score)): 
-                            if (neighbour_score[n] > maximum_val) and (pos != indexchbck):
-                                maximum_val = neighbour_score[n]
-                    listRole[listPos[neighbour_score.index(maximum_val)]] = "CHbck"
-
-                elif (ch == 1 and chbck == 0 and len(listNeighbor[0][j]) > 2):
-                    neighbour_role = []
-                    neighbour_score = []
-                    for pos in listPos:
-                        neighbour_role.append(listRole[pos])
-                        neighbour_score.append(listRank[pos])
-                        maximum_val = neighbour_score[0]
-                        for n in range(1, len(neighbour_score)): 
-                            if (neighbour_score[n] > maximum_val) and (pos != indexch):
-                                maximum_val = neighbour_score[n]
-                    listRole[listPos[neighbour_score.index(maximum_val)]] = "CHbck"
-                
+                listPos.insert(0,i)
+                for j in listPos:
+                    if listRole[j] == 'CH':
+                        ch = ch + 1
+                    elif listRole[j] == 'CHbck':
+                        chbck = chbck + 1
+                    elif listRole[j] == 0:
+                        withoutRole.append(j)
+                    elif listRole[j] == 'CM':
+                        listCMNb.append(j)
+                for j in withoutRole:
+                    listRole[j] = 'CM'
+                if ch >= 1 and chbck >= 1:
+                    pass
+                elif ch >= 1 and chbck == 0:
+                    max = 0
+                    maxindex = 'no'
+                    for k in withoutRole+listCMNb:
+                        if listRank[k] >= max:
+                            max = listRank[k]
+                            maxindex = k
+                    if maxindex != 'no':
+                        listRole[maxindex] = 'CHbck'
+                    else:
+                        listRole[withoutRole[-1]] = 'CHbck'
+                elif ch == 0 and chbck >= 1:
+                    max = 0
+                    maxindex = 'no'
+                    for k in withoutRole+listCMNb:
+                        if listRank[k] >= max:
+                            max = listRank[k]
+                            maxindex = k
+                    listRole[maxindex] = 'CH'
                 else:
-                    posCHbck = 0
-                    for i in range(nbNb +1):
-                        if i == 0:
-                            vscore = listRankNb[i]
-                            posCH = i
+                    max = 0
+                    maxindex = 'no'
+                    secondindex = 'no'
+                    for k in withoutRole+listCMNb:
+                        if listRank[k] >= max:
+                            max = listRank[k]
+                            secondindex = maxindex
+                            maxindex = k
+                    if maxindex != 'no' and secondindex != 'no':
+                        listRole[maxindex] = 'CH'
+                        listRole[secondindex] = 'CHbck'
+                    elif maxindex != 'no':
+                        listRole[maxindex] = 'CH'
+                        if withoutRole[-1] != maxindex:
+                            listRole[withoutRole[-1]] = 'CHbck'
                         else:
-                            if listRankNb[i] >= vscore:
-                                vscore = listRankNb[i]
-                                posCHbck = posCH
-                                posCH = i
-                    for i in range(nbNb+1):
-                        if i == posCH:
-                            listRole[listPos[i]] = "CH"
-                        elif i == posCHbck:
-                            listRole[listPos[i]] = "CHbck"
-                        if i != posCH and i != posCHbck:
-                            listRole[listPos[i]] = "CM"
+                            listRole[withoutRole[0]] = 'CHbck'
     return listRole, listID, listRank
 
 def removeOldCar(listID, listIDassigned, listRank, listRole):
@@ -372,8 +290,8 @@ def removeOldCar(listID, listIDassigned, listRank, listRole):
     for i in range(len(listID)):
         if listID[i] not in listIDassigned:
             add = add + 1
-            listRank.insert(i,0 + add)
-            listRole.insert(i,0 + add)
+            listRank.insert(i,'no')
+            listRole.insert(i,0)
             notAssignedIndex.append(i)
     return notAssignedIndex
 
@@ -418,6 +336,26 @@ def maintainCH(listID, listIDassigned, listRank, listRole, listNeighbor):
     speedNeighbor(listID,listNeighbor,newListRole)
     return newListRole, listIDassigned, newListRank
         
+def printRoleRankNeigbour(listID, listNeighbor,listRole, listRank):
+    '''
+    This function helps you to see the output of cH selection algorithms
+
+            Parameters: 
+                    listID (list or tuple): a list of vehicle
+                    listNeighbor (tuple): list of vehicle having already been assigned
+                    listRole (list): list of roles
+                    listRank (list): list of EBM ranks
+    '''
+    for i in range(len(listID)):
+        listRoleNb = []
+        listRankNb = []
+        listRoleNb.append(listRole[i])
+        listRankNb.append(listRank[i])
+        for j in listNeighbor[1][i]:
+            listRoleNb.append(listRole[j])
+            listRankNb.append(listRank[j])
+        print(listRoleNb)
+        print(listRankNb)
 
 def assignColor(listID, listRole):
     '''
