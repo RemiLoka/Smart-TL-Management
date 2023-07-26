@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 def calculationError(VehicleID, dt=1):
     '''
@@ -56,3 +57,30 @@ def calculationTot():
     df.loc[0, 'tot'] = means
     df.to_csv('memorybasics.csv', index=False)
     return means
+
+def traceCurve():
+    df = pd.read_csv("/Users/remi/Desktop/ContenuStage/Smart-TL-Management/Basic/time.csv")
+    listValue = []
+    y_max = []
+    y_min = []
+    listTotLenVeh = df.loc[:,'Nb car']
+    listTotLenVeh = list(set(listTotLenVeh))
+    print(listTotLenVeh)
+    for number in listTotLenVeh:
+        listIndex = []
+        listIndex = list(np.where(df["Nb car"] == number))
+        sum = 0
+        listTime = []
+        for index in listIndex[0]:
+            sum = sum + df.loc[index, 'time']
+            listTime.append(df.loc[index, 'time'])
+        sum = sum/len(listIndex[0])
+        listValue.append(sum)
+        y_max.append(max(listTime))
+        y_min.append(min(listTime))
+    print(type(listTotLenVeh),type(listValue))
+    plt.plot(listTotLenVeh, listValue,'r',listTotLenVeh,y_min,'g')
+    plt.xlabel('number of vehicles')
+    plt.ylabel('execution time')
+    plt.legend(["average","min"])
+    plt.show()
