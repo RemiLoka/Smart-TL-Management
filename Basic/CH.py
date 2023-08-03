@@ -1,8 +1,4 @@
-'''
-
-@author: RemiLoka
-
-'''
+'''@author: RemiLoka'''
 
 import numpy as np
 import traci

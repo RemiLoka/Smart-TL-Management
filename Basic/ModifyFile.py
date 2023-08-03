@@ -1,8 +1,4 @@
-'''
-
-@author: RemiLoka
-
-'''
+'''@author: RemiLoka'''
 
 import pandas as pd
 import numpy as np
@@ -64,8 +60,14 @@ def calculationTot():
     df.to_csv('memorybasics.csv', index=False)
     return means
 
-def traceCurve():
-    df = pd.read_csv("/Users/remi/Desktop/ContenuStage/Smart-TL-Management/Basic/time.csv")
+def traceTimeCurve(path):
+    '''
+    This function traces the execution time of CH algorithms as a function of the number of vehicles
+
+            Parameters:
+                    path: Your path to the directory
+    '''
+    df = pd.read_csv(path + "/Basic/time.csv")
     listValue = []
     y_max = []
     y_min = []
@@ -91,14 +93,27 @@ def traceCurve():
     plt.show()
 
 def graphCHpie(qty,lenListVeh):
+    '''
+    This function traces a pie graph of the proportion of CH, CHbck, CM 
+
+            Parameters:
+                    qty: quantity of CH, CHbck, CM
+                    lenListVeh: number of vehicles present (sum of CH, CHbck, CM)
+    '''
     labels = 'CH','CHbck','CM'
     fig, ax = plt.subplots()
     ax.pie(qty, labels=labels, autopct='%1.1f%%')
     plt.title('distribution for %s vehicles' %str(lenListVeh))
     plt.show()
 
-def curveCH():
-    df = pd.read_csv("/Users/remi/Desktop/ContenuStage/Smart-TL-Management/Basic/CH.csv")
+def curveCH(path):
+    '''
+    This function traces a graph of the proportion of CH, CHbck, CM as a function of the number of vehicles in the simulation
+
+            Parameters:
+                    path: Your path to the directory
+    '''
+    df = pd.read_csv(path + "/Basic/time.csv")
     listValueCH = []
     listValueCHbck = []
     listValueCM = []
@@ -124,8 +139,7 @@ def curveCH():
     y1 = np.array(listValueCH)
     y2 = np.array(listValueCHbck)
     y3 = np.array(listValueCM)
-    
-    # plot bars in stack manner
+
     plt.fill_between(x, y3+y2, y1+y2+y3, color = 'r')
     plt.fill_between(x, y3, y3 + y2, color = 'y')
     plt.fill_between(x, 0, y3, color = 'b')
@@ -134,5 +148,3 @@ def curveCH():
     plt.legend(["CH", "CHbck", "CM"])
     plt.title("Proportion of roles in the simulation")
     plt.show()
-
-curveCH()
