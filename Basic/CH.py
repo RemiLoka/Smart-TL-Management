@@ -1,3 +1,9 @@
+'''
+
+@author: RemiLoka
+
+'''
+
 import numpy as np
 import traci
 from copy import copy
