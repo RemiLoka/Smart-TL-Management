@@ -25,11 +25,11 @@ So my functions are designed to adapt to all types of intersection.
 • Secondly, you need to use two functions available in the /sumo/tools file
 And use the following lines of code:
 
-'''python osmWebWizard.py'''
+```python osmWebWizard.py```
 
 For more information, see [osmWebWizard Documentation](https://sumo.dlr.de/docs/Tutorials/OSMWebWizard.html)
 
-'''python randomTrips . py -n osm . net . xml -r osm_pt . roub . xml -e 4801140'''
+```python randomTrips . py -n osm . net . xml -r osm_pt . roub . xml -e 4801140```
 
 For more information, see [randomTrips Documentation](https://sumo.dlr.de/docs/Tools/Trip.html)
 
