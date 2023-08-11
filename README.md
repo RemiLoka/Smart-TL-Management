@@ -14,13 +14,17 @@ This repository deals with cluster head election and vehicle position and direct
 
 On GitHub it only has the python function files. Not the data.
 
-The sumo data is too big to be exported to GitHub in the normal way (I need to compress it) and in any case I intend to use other data in the future.
+The sumo data is too big to be exported to GitHub in the normal way, you need to create the data files.
 
 So my functions are designed to adapt to all types of intersection.
 
 ## Things to do before launching the programme
 
+# Software version
+
 • First you need to install Python 2.7 or higher, and install SUMO
+
+# Data creation
 
 • Secondly, you need to use two functions available in the /sumo/tools file
 And use the following lines of code:
